@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/go-admin-team/go-admin-core/sdk/config"
+	swaggerfiles "github.com/swaggo/files"
 	"go-admin/app/admin/apis"
 	"mime"
 
@@ -9,7 +10,6 @@ import (
 	jwt "github.com/go-admin-team/go-admin-core/sdk/pkg/jwtauth"
 	"github.com/go-admin-team/go-admin-core/sdk/pkg/ws"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/swaggo/gin-swagger/swaggerFiles"
 
 	"go-admin/common/middleware"
 	"go-admin/common/middleware/handler"
@@ -54,11 +54,11 @@ func sysStaticFileRouter(r *gin.RouterGroup) {
 }
 
 func sysSwaggerRouter(r *gin.RouterGroup) {
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 }
 
 func sysCheckRoleRouterInit(r *gin.RouterGroup, authMiddleware *jwt.GinJWTMiddleware) {
-	wss:=r.Group("").Use(authMiddleware.MiddlewareFunc())
+	wss := r.Group("").Use(authMiddleware.MiddlewareFunc())
 	{
 		wss.GET("/ws/:id/:channel", ws.WebsocketManager.WsClient)
 		wss.GET("/wslogout/:id/:channel", ws.WebsocketManager.UnWsClient)
